@@ -85,4 +85,43 @@ class UserModel
 
         return $user;
     }
+
+public function hashPassword() {
+    if (!empty($this->senha)) {
+        $this->senha = password_hash($this->senha, PASSWORD_DEFAULT);
+    }
+}
+
+public function calculateAge() {
+    if (!empty($this->idade)) {
+        $dob = new DateTime($this->idade);
+        $today = new DateTime();
+        $age = $today->diff($dob)->y;
+
+        return $age;
+    }
+
+    return null;  // Ou outra marcação apropriada para indicar que a idade não pode ser calculada
+}
+
+
+public function validate() {
+    $errors = [];
+
+    // Validação de e-mail
+    if (!filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
+        $errors[] = 'O e-mail não é válido.';
+    }
+
+    // Validação de senha
+    if (strlen($this->senha) < 8) {
+        $errors[] = 'A senha deve ter pelo menos 8 caracteres.';
+    }
+
+    // Adicione mais validações conforme necessário
+
+    return $errors;
+}
+
+
 }
